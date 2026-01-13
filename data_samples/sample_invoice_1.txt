@@ -1,0 +1,88 @@
+═══════════════════════════════════════════════════════════════════
+                    GLOBAL LOGISTICS CO.
+           Sustainable Transportation & Supply Chain Solutions
+═══════════════════════════════════════════════════════════════════
+
+SHIPPING INVOICE
+
+Invoice No: INV-2024-00145                    Date: January 8, 2024
+Supplier ID: SUP-MH-2024-089                   PO Ref: PO/2024/0089
+
+───────────────────────────────────────────────────────────────────
+SHIPPER DETAILS:
+Global Logistics Co.
+Mumbai Port, Gate 5, Warehouse Complex
+Maharashtra - 400001
+GST: 27AABCU9603R1ZM
+
+CONSIGNEE DETAILS:
+Delhi Distribution Center
+Sector 18, Industrial Area
+New Delhi - 110025
+───────────────────────────────────────────────────────────────────
+
+SHIPMENT INFORMATION:
+
+Origin:          Mumbai Port (Maharashtra)
+Destination:     Delhi Warehouse (NCR)
+Transport Mode:  Road Freight - Heavy Truck (20T capacity)
+Route Type:      Domestic Interstate
+
+Shipment Weight: 2,500 kg (2.5 metric tons)
+Distance:        1,450 kilometers
+Transit Time:    36 hours
+
+───────────────────────────────────────────────────────────────────
+LINE ITEMS:
+
+Description                    Qty      Unit Price    Amount (INR)
+Electronic Components          2500kg   ₹125/kg       ₹312,500.00
+Packaging & Handling           1 lot    ₹5,000        ₹5,000.00
+Insurance Coverage             1 lot    ₹2,500        ₹2,500.00
+                                                      ───────────
+Subtotal:                                             ₹320,000.00
+CGST @ 9%:                                            ₹28,800.00
+SGST @ 9%:                                            ₹28,800.00
+                                                      ═══════════
+TOTAL:                                                ₹377,600.00
+
+───────────────────────────────────────────────────────────────────
+ENVIRONMENTAL IMPACT DISCLOSURE (SEBI BRSR Compliance):
+
+Carbon Footprint Assessment:
+- Scope 3 Category 4: Upstream Transportation
+- Emission Factor Used: Industry Average (Road Freight)
+- Calculation Method: GHG Protocol
+
+Total CO2 Equivalent Emissions: 245.5 kg CO2e
+
+Breakdown:
+  • Fuel Consumption: ~165 liters diesel
+  • Emission Intensity: 0.096 kg CO2e per ton-km
+  • Route Efficiency: Standard interstate highway
+
+Verification: Self-reported (Supplier data)
+Data Quality: Medium (Industry average factors)
+
+───────────────────────────────────────────────────────────────────
+NOTES:
+- Shipment departed: 06-Jan-2024, 08:00 AM
+- Expected delivery: 07-Jan-2024, 08:00 PM
+- Driver: Rajesh Kumar (License: MH-12-2024-001234)
+- Vehicle: MH-02-AB-1234 (GPS tracked)
+
+[Handwritten note: "Verified by warehouse - RK 08/01"]
+[Stamp: "RECEIVED 07-JAN-2024"]
+
+───────────────────────────────────────────────────────────────────
+For queries contact:
+Email: logistics@globallogistics.in
+Phone: +91-22-2345-6789
+
+Authorized Signatory: ________________
+                      (Amit Sharma)
+                      Operations Manager
+
+═══════════════════════════════════════════════════════════════════
+This document is computer generated and requires no signature
+═══════════════════════════════════════════════════════════════════

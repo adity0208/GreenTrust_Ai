@@ -1,0 +1,120 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║              EXPRESS FREIGHT SERVICES PVT. LTD.                   ║
+║           Fast, Reliable, Eco-Conscious Shipping                  ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+COMMERCIAL INVOICE & SHIPPING MANIFEST
+
+Invoice #: EFS/BLR/2024/0112              Date: January 10, 2024
+Supplier Code: SUP-KA-2024-112            Customer PO: CPO-2024-0456
+
+─────────────────────────────────────────────────────────────────────
+FROM:
+Express Freight Services
+Electronic City Phase 1, Bangalore
+Karnataka - 560100
+GSTIN: 29AACCE5678P1Z1
+Contact: +91-80-4567-8901
+
+TO:
+Chennai International Port - Export Division
+North Port Area, Chennai
+Tamil Nadu - 600001
+─────────────────────────────────────────────────────────────────────
+
+SHIPMENT MANIFEST:
+
+Cargo Type:       Industrial Machinery Parts (Export)
+Origin:           Bangalore (Electronic City)
+Destination:      Chennai Port → Singapore (Sea Freight)
+Domestic Leg:     Road Transport (Bangalore to Chennai)
+International:    Sea Freight (Chennai to Singapore)
+
+Package Details:
+- Total Weight: 5,000 kg (5.0 MT)
+- Dimensions: 12 pallets (120cm x 100cm x 150cm each)
+- Packaging: Wooden crates with moisture protection
+
+─────────────────────────────────────────────────────────────────────
+TRANSPORTATION BREAKDOWN:
+
+LEG 1 - DOMESTIC ROAD TRANSPORT:
+Route:           Bangalore → Chennai Port
+Distance:        350 km
+Mode:            Heavy Goods Vehicle (HGV)
+Vehicle:         KA-51-MN-7890
+Duration:        7-8 hours
+
+LEG 2 - INTERNATIONAL SEA FREIGHT:
+Route:           Chennai → Singapore
+Distance:        ~2,000 nautical miles
+Mode:            Container Ship (20ft container)
+Vessel:          MV Ocean Carrier
+Duration:        5-7 days
+
+─────────────────────────────────────────────────────────────────────
+CHARGES:
+
+Item                              Rate          Amount (INR)
+Road Transport (BLR-CHN)          ₹18/km        ₹6,300.00
+Port Handling Charges             Fixed         ₹8,500.00
+Documentation & Customs           Fixed         ₹4,200.00
+Sea Freight (Estimated)           $450 USD      ₹37,350.00
+Insurance (Comprehensive)         2% of value   ₹5,000.00
+                                               ─────────────
+                                  Subtotal:     ₹61,350.00
+                                  IGST @ 18%:   ₹11,043.00
+                                               ═════════════
+                                  TOTAL:        ₹72,393.00
+
+─────────────────────────────────────────────────────────────────────
+CARBON EMISSIONS REPORT (ESG Disclosure):
+
+Scope 3 - Category 4 Analysis:
+
+DOMESTIC SEGMENT (Road):
+- Distance: 350 km
+- Weight: 5,000 kg
+- Emission Factor: 0.096 kg CO2e/ton-km
+- Emissions: ~168 kg CO2e
+
+INTERNATIONAL SEGMENT (Sea):
+- Distance: ~2,000 km
+- Weight: 5,000 kg  
+- Emission Factor: 0.016 kg CO2e/ton-km (container ship)
+- Emissions: ~12 kg CO2e
+
+TOTAL CARBON FOOTPRINT: 180.0 kg CO2e
+(Combined road + sea transport)
+
+Data Source: Supplier-provided emission factors
+Verification Status: Pending third-party audit
+Compliance: SEBI BRSR Value Chain Disclosure
+
+─────────────────────────────────────────────────────────────────────
+SPECIAL INSTRUCTIONS:
+✓ Temperature controlled storage required
+✓ Handle with care - fragile components
+✓ Customs clearance documents attached
+✓ Export license: EXP/2024/KA/00789
+
+[Stamp: "EXPORT APPROVED - CUSTOMS CHN"]
+[Handwritten: "Loaded 10/01 - 14:30 - SK"]
+
+─────────────────────────────────────────────────────────────────────
+TRACKING INFORMATION:
+Road Tracking: EFS-BLR-112-R
+Sea Tracking: OCLU2024010112 (Container #)
+Real-time updates: www.expressfreight.in/track
+
+Customer Service:
+Email: support@expressfreight.in
+Phone: 1800-123-4567 (Toll Free)
+
+Prepared by: Suresh Kumar
+Designation: Logistics Coordinator
+Date: 10-Jan-2024
+
+╔═══════════════════════════════════════════════════════════════════╗
+║  This is a digitally generated document. No signature required.  ║
+╚═══════════════════════════════════════════════════════════════════╝

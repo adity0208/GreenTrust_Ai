@@ -1,0 +1,79 @@
+[project]
+name = "greentrust-ai"
+version = "1.0.0"
+description = "Autonomous Multi-Agent ESG Scope 3 Auditor with SEBI BRSR Compliance"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "GreenTrust AI Team"}
+]
+keywords = ["esg", "carbon", "audit", "ai", "sebi", "brsr", "scope3"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Topic :: Office/Business :: Financial",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "langgraph>=0.0.20",
+    "langchain>=0.1.0",
+    "langchain-openai>=0.0.5",
+    "langchain-core>=0.1.0",
+    "pydantic>=2.5.0",
+    "pymupdf>=1.23.0",
+    "ragas>=0.1.0",
+    "python-dotenv>=1.0.0",
+    "openai>=1.10.0",
+    "reportlab>=4.0.0",
+    "streamlit>=1.30.0",
+    "plotly>=5.18.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/greentrust-ai"
+Documentation = "https://github.com/yourusername/greentrust-ai/blob/main/README.md"
+Repository = "https://github.com/yourusername/greentrust-ai"
+
+[project.scripts]
+greentrust-audit = "main:main"
+
+# Note: This project uses a flat structure, install dependencies with:
+# uv pip install langgraph langchain langchain-openai pydantic pymupdf ragas python-dotenv openai reportlab streamlit plotly
+
+# ✅ Replace deprecated [tool.uv.dev-dependencies] with dependency groups
+[dependency-groups]
+dev = [
+    "pytest>=7.4.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501"]
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
