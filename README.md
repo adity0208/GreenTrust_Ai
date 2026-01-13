@@ -24,7 +24,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ```bash
 # Clone repository
-git clone <your-repo-url>
+git clone https://github.com/adity0208/GreenTrust_Ai
 cd GreenTrust_Ai
 
 # Install with uv (⚡ 10-100x faster than pip)
