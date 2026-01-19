@@ -7,11 +7,13 @@ GreenTrust_Ai/
 │   ├── pyproject.toml          # Modern Python project config (uv-compatible)
 │   ├── README.md                # Complete project documentation
 │   ├── QUICKSTART.md            # 3-command setup guide
+│   ├── PROJECT_STRUCTURE.md     # This file
 │   ├── .env                     # Environment variables (API keys)
 │   ├── .env.example             # Environment template
 │   ├── .gitignore               # Git ignore rules (uv-aware)
 │   ├── config.py                # Configuration settings
-│   └── demo_config.py           # Demo mode flag
+│   ├── demo_config.py           # Demo mode flag
+│   └── llm_providers.py         # Multi-provider LLM abstraction (Groq/Gemini/OpenAI)
 │
 ├── 🤖 Multi-Agent System
 │   └── agents/
@@ -73,11 +75,11 @@ GreenTrust_Ai/
 
 | Category | Count |
 |----------|-------|
-| Python files | 20 |
-| Configuration | 5 |
-| Documentation | 3 |
-| Sample PDFs | 7 |
-| **Total** | **35** |
+| Python files | 21 |
+| Configuration | 6 |
+| Documentation | 4 |
+| Sample PDFs | 10 |
+| **Total** | **41** |
 
 ## 🎯 Key Directories
 
@@ -101,10 +103,10 @@ Valid, suspicious, and edge case invoices for testing.
 
 ## 📦 Dependencies (via uv)
 
-Installed with: `uv pip install langgraph langchain langchain-openai pydantic pymupdf ragas python-dotenv openai reportlab streamlit plotly`
+Installed with: `uv pip install langgraph langchain langchain-openai langchain-groq langchain-google-genai pydantic pymupdf ragas python-dotenv openai reportlab streamlit plotly`
 
 - **LangGraph** - Multi-agent orchestration
-- **LangChain** - LLM framework
+- **LangChain** - LLM framework (OpenAI, Groq, Gemini)
 - **Pydantic** - Data validation
 - **PyMuPDF** - PDF parsing
 - **Streamlit** - Dashboard UI
@@ -115,10 +117,11 @@ Installed with: `uv pip install langgraph langchain langchain-openai pydantic py
 
 ✅ **UV Package Manager** - 10-100x faster than pip  
 ✅ **pyproject.toml** - Single source of truth  
+✅ **Multi-Provider LLM** - Groq (free), Gemini, OpenAI with auto-fallback  
 ✅ **Flat Structure** - No src/ directory needed  
 ✅ **Type-Safe** - Pydantic v2 models  
 ✅ **Modular** - Clean separation of concerns  
 
 ## 🏆 Competition Ready!
 
-Total project size: **35 files** across **8 directories**
+Total project size: **41 files** across **9 directories**

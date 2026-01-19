@@ -3,6 +3,7 @@ GreenTrust AI - Streamlit Dashboard (Hybrid Mode)
 Tries live API first, falls back to demo mode if quota exceeded.
 """
 
+import uuid
 import streamlit as st
 import plotly.graph_objects as go
 from pathlib import Path
@@ -17,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from agents import create_audit_workflow, AuditState
 from agents.state import ExtractionResult, VerificationResult, ComplianceResult, ReasoningStep
 from knowledge_base.logistics_api import logistics_api
+from llm_providers import get_available_providers, PROVIDER_CONFIGS
 
 # Page configuration
 st.set_page_config(
@@ -141,9 +143,12 @@ def display_thinking_process(reasoning_history):
             st.caption(f"Timestamp: {step.timestamp.strftime('%H:%M:%S')}")
 
 
-def run_live_audit(pdf_path: str):
-    """Run audit with live API (with fallback to regex if quota exceeded)."""
+def run_live_audit(pdf_path: str, thread_id: str = None):
+    """Run audit with live API and persistence."""
     
+    if not thread_id:
+        thread_id = str(uuid.uuid4())
+        
     document_id = Path(pdf_path).stem
     initial_state = AuditState(
         pdf_path=pdf_path,
@@ -151,21 +156,31 @@ def run_live_audit(pdf_path: str):
     )
     
     workflow = create_audit_workflow()
+    config = {"configurable": {"thread_id": thread_id}}
     
     try:
-        result = workflow.invoke(initial_state)
+        # Initial run
+        result = workflow.invoke(initial_state, config=config)
+        
+        # Verify if result is comprehensive (might be halted)
+        # We can fetch latest state from graph to be sure
+        final_state_snapshot = workflow.get_state(config)
+        final_state = final_state_snapshot.values
+        
+        # If interrupted, final_state might not be fully updated, 
+        # but we return what we have. The UI checks .next to see if halted.
         
         # Convert dict to AuditState if needed
-        if isinstance(result, dict):
-            final_state = AuditState(**result)
-        else:
-            final_state = result
-        
-        return final_state, True  # Success
+        if isinstance(final_state, dict):
+            final_state = AuditState(**final_state)
+            
+        return final_state, thread_id, True
         
     except Exception as e:
         st.error(f"Workflow error: {str(e)}")
-        return None, False
+        import traceback
+        st.error(traceback.format_exc())
+        return None, thread_id, False
 
 
 def main():
@@ -188,6 +203,40 @@ def main():
     
     # Sidebar
     with st.sidebar:
+        st.markdown("### 🤖 LLM Provider")
+        
+        # Get available providers
+        available = get_available_providers()
+        
+        if available:
+            provider_options = []
+            for prov, conf in available:
+                label = f"{prov.upper()} - {conf['description']}"
+                provider_options.append((label, prov))
+            
+            # Current provider from env
+            current_provider = os.getenv("LLM_PROVIDER", "groq")
+            default_idx = next((i for i, (_, p) in enumerate(provider_options) if p == current_provider), 0)
+            
+            selected_label = st.selectbox(
+                "Select Provider:",
+                [label for label, _ in provider_options],
+                index=default_idx
+            )
+            
+            # Get selected provider
+            selected_provider = next(prov for label, prov in provider_options if label == selected_label)
+            
+            # Update environment variable
+            os.environ["LLM_PROVIDER"] = selected_provider
+            
+            # Show provider info
+            provider_info = PROVIDER_CONFIGS[selected_provider]
+            st.info(f"**Model**: {provider_info['model']}\n\n**Free**: {'✅ Yes' if provider_info['free'] else '❌ No'}")
+        else:
+            st.warning("⚠️ No API keys configured. Add keys to `.env` file.")
+        
+        st.markdown("---")
         st.markdown("### 📊 About")
         st.info(f"""
         **GreenTrust AI** uses multi-agent AI to audit carbon emission claims.
@@ -198,7 +247,7 @@ def main():
         - ✅ Compliance Agent
         - 👤 Human Review
         
-        **Mode**: {'🔴 Live API' if mode == 'live' else '🟡 Demo'}
+        **Fallback**: {'✅ Enabled' if os.getenv('ENABLE_FALLBACK', 'true') == 'true' else '❌ Disabled'}
         """)
         
         st.markdown("---")
@@ -243,14 +292,67 @@ def main():
         
         if st.button("🚀 Run Audit", type="primary"):
             with st.spinner("Running audit..."):
-                final_state, success = run_live_audit(pdf_path)
+                final_state, thread_id, success = run_live_audit(pdf_path)
                 
                 if success and final_state:
                     st.session_state['audit_result'] = final_state
+                    st.session_state['thread_id'] = thread_id
                     st.session_state['mode_used'] = "live"
                     st.rerun()
                 else:
                     st.error("Audit failed. Check logs for details.")
+
+    # Check for HITL Interruption (Pending Review)
+    if 'thread_id' in st.session_state and 'audit_result' in st.session_state:
+        thread_id = st.session_state['thread_id']
+        workflow = create_audit_workflow()
+        config = {"configurable": {"thread_id": thread_id}}
+        
+        try:
+            snapshot = workflow.get_state(config)
+            next_step = snapshot.next
+            
+            if next_step and "human_review" in next_step:
+                st.markdown("---")
+                st.markdown("### 🛑 Pending Human Review")
+                st.warning("The audit has been paused because a high deviation was detected.")
+                
+                # Show reasoning
+                state_values = snapshot.values
+                if isinstance(state_values, dict):
+                    reason = state_values.get("human_review_reason", "Verification deviation exceeded threshold.")
+                else:
+                    reason = state_values.human_review_reason
+                
+                st.info(f"**Reason:** {reason}")
+                
+                col_rev1, col_rev2 = st.columns(2)
+                with col_rev1:
+                    if st.button("✅ Confirm Flag (Reject Invoice)", type="primary"):
+                        workflow.update_state(config, {"human_review_decision": "reject"})
+                        # Resume
+                        result = workflow.invoke(None, config=config)
+                        # Update session state
+                        if isinstance(result, dict):
+                            st.session_state['audit_result'] = AuditState(**result)
+                        else:
+                            st.session_state['audit_result'] = result
+                        st.rerun()
+                        
+                with col_rev2:
+                    if st.button("⚠️ Override & Approve Invoice"):
+                        workflow.update_state(config, {"human_review_decision": "approve"})
+                        # Resume
+                        result = workflow.invoke(None, config=config)
+                        # Update session state
+                        if isinstance(result, dict):
+                            st.session_state['audit_result'] = AuditState(**result)
+                        else:
+                            st.session_state['audit_result'] = result
+                        st.rerun()
+        except Exception as e:
+            # Checkpoint might not exist if freshly started
+            pass
     
     with col2:
         st.markdown("### 📋 Quick Stats")

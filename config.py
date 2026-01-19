@@ -19,10 +19,14 @@ OUTPUT_DIR = PROJECT_ROOT / "output"
 # Ensure output directory exists
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-# LLM Configuration
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4-turbo-preview")
-LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.1"))
+# LLM Configuration - Multi-Provider Support
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "groq")  # Options: groq, gemini, openai
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+LLM_MODEL = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")  # Default: Groq model
+LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.0"))
+ENABLE_FALLBACK = os.getenv("ENABLE_FALLBACK", "true").lower() == "true"
 
 # SEBI BRSR Compliance Thresholds
 BRSR_THRESHOLDS = {

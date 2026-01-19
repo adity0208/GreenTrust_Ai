@@ -55,28 +55,29 @@ def human_review_node(state: AuditState) -> AuditState:
         result="PENDING_REVIEW"
     ))
     
-    # In production, this would:
-    # 1. Send notification to human reviewer
-    # 2. Pause workflow execution
-    # 3. Wait for human decision (approve/reject/modify)
-    # 4. Resume workflow with decision
+    # In production with HITL:
+    # 1. Workflow pauses before this node (interrupt_before)
+    # 2. Human updates state.human_review_decision via UI
+    # 3. Workflow resumes and executes this node
     
-    # For demo purposes, auto-approve if trust score > 50, else reject
-    auto_decision = "approve" if (state.compliance and state.compliance.trust_score > 50) else "reject"
+    decision = state.human_review_decision
+    if not decision:
+        # Fallback if no decision provided (shouldn't happen with proper HITL)
+        logger.warning("No human decision found in state, defaulting to REJECT")
+        decision = "reject"
     
     state.human_review_completed = True
-    state.human_review_decision = auto_decision
-    state.workflow_status = f"human_review_{auto_decision}"
+    state.workflow_status = f"human_review_{decision.lower()}"
     
     state.reasoning_history.append(ReasoningStep(
         agent="human_review",
         timestamp=datetime.now(),
         action="review_decision",
-        reasoning=f"Human reviewer decision: {auto_decision.upper()}",
-        result=auto_decision.upper()
+        reasoning=f"Human reviewer decision: {decision.upper()}",
+        result=decision.upper()
     ))
     
-    logger.info(f"Human review decision: {auto_decision}")
+    logger.info(f"Human review decision processed: {decision}")
     return state
 
 
@@ -137,9 +138,23 @@ def create_audit_workflow():
     # Edge from human review to end
     workflow.add_edge("human_review", END)
     
-    # Compile the graph
-    app = workflow.compile()
+    # Initialize checkpointer (SQLite)
+    import sqlite3
+    from langgraph.checkpoint.sqlite import SqliteSaver
     
-    logger.info("Audit workflow created successfully with human review logic")
+    # Use distinct connection per thread? No, Checkpointer handles it.
+    # Note: connect outside or ensure reuse. For simplicity in Streamlit, we create new connection
+    # or rely on SqliteSaver opening it.
+    conn = sqlite3.connect("checkpoints.db", check_same_thread=False)
+    checkpointer = SqliteSaver(conn)
+    
+    # Compile the graph with persistence and interrupt
+    # interrupt_before=["human_review"]: Pause before entering human review node
+    app = workflow.compile(
+        checkpointer=checkpointer,
+        interrupt_before=["human_review"]
+    )
+    
+    logger.info("Audit workflow created with persistence (SQLite) and HITL interrupts")
     return app
 

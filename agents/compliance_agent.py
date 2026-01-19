@@ -4,8 +4,8 @@ Generates a Trust Score and compliance recommendations.
 """
 
 from .state import AuditState, ComplianceResult
-from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
+from llm_providers import get_llm_with_fallback
 import config
 import logging
 from pathlib import Path
@@ -17,12 +17,9 @@ brsr_standards_path = config.KNOWLEDGE_BASE_DIR / "sebi_brsr_standards.md"
 with open(brsr_standards_path, "r", encoding="utf-8") as f:
     BRSR_STANDARDS = f.read()
 
-# LLM for compliance evaluation
-llm = ChatOpenAI(
-    model=config.LLM_MODEL,
-    temperature=config.LLM_TEMPERATURE,
-    api_key=config.OPENAI_API_KEY
-)
+# Get LLM with automatic fallback
+llm, provider_used = get_llm_with_fallback()
+logger.info(f"Compliance agent using provider: {provider_used}")
 
 # Compliance evaluation prompt
 compliance_prompt = ChatPromptTemplate.from_messages([

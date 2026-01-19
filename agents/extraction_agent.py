@@ -4,22 +4,20 @@ Uses PyMuPDF for PDF parsing and LLM for structured data extraction.
 """
 
 import fitz  # PyMuPDF
-from langchain_openai import ChatOpenAI
+from .state import AuditState, ExtractionResult, ReasoningStep
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
-from .state import AuditState, ExtractionResult
+from llm_providers import get_llm_with_fallback
 import config
 import logging
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
 
-# LLM for extraction
-llm = ChatOpenAI(
-    model=config.LLM_MODEL,
-    temperature=config.LLM_TEMPERATURE,
-    api_key=config.OPENAI_API_KEY
-)
+# Get LLM with automatic fallback
+llm, provider_used = get_llm_with_fallback()
+logger.info(f"Extraction agent using provider: {provider_used}")
 
 # Output parser
 parser = PydanticOutputParser(pydantic_object=ExtractionResult)
@@ -107,12 +105,35 @@ def extraction_agent(state: AuditState) -> AuditState:
             result=f"Extracted {len(invoice_text)} chars"
         ))
         
+        # PII Redaction
+        from utils.privacy import pii_guard
+        
+        # Check for PII
+        pii_types = pii_guard.contains_pii(invoice_text)
+        if pii_types:
+            logger.info(f"PII detected: {pii_types}. Redacting...")
+            redacted_text, _ = pii_guard.redact_text(invoice_text)
+            
+            state.reasoning_history.append(ReasoningStep(
+                agent="extraction",
+                timestamp=datetime.now(),
+                action="pii_redaction",
+                reasoning=f"Detected potential PII ({', '.join(set(pii_types))}). Masking sensitive data before LLM processing.",
+                result="PII_REDACTED"
+            ))
+            
+            # Use redacted text for LLM
+            llm_input_text = redacted_text
+        else:
+            llm_input_text = invoice_text
+        
         # Use LLM to extract structured data
         state.reasoning_history.append(ReasoningStep(
             agent="extraction",
             timestamp=datetime.now(),
             action="llm_extraction",
-            reasoning="Using LLM to extract structured carbon metrics (CO2e, supplier ID, route, mode, weight, distance)"
+            reasoning="Using LLM to extract structured carbon metrics (CO2e, supplier ID, route, mode, weight, distance)",
+            result="PROCESSING"
         ))
         
         # Check for demo mode
@@ -167,7 +188,7 @@ def extraction_agent(state: AuditState) -> AuditState:
                 chain = extraction_prompt | llm | parser
                 
                 extraction_result = chain.invoke({
-                    "invoice_text": invoice_text[:5000],
+                    "invoice_text": llm_input_text[:5000],
                     "format_instructions": parser.get_format_instructions()
                 })
                 
